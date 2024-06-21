@@ -1,0 +1,50 @@
+section{
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 400px 400px 400px;
+    gap: 25px;
+}
+
+.generalClass{
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+    /* width: 300px; To be commented */
+}
+
+.taskList{
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 300px;
+    height: auto;
+}
+
+.scrollBar{
+    width: 100%;
+    background-color: #e3e3e3;
+    height: 8px;
+    border-radius: 5px;
+}
+
+.dateTimeToBeCompleted{
+    height: 50px;
+}
+
+.dateTimeToBeCompletedDiv{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    gap:15px;
+}
+
+.arrowCSS{
+    font-size: 15px; 
+    text-align: center; 
+    border: 1px solid black; 
+    width: 30px; 
+    height: 30px;
+}
+
