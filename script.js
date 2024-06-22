@@ -68,6 +68,10 @@ taskColorMap = {
 }
 
 function addElement(toBeChangedEle, arr){
+    // if(toBeChangedEle.id=="todo")
+    toBeChangedEle.innerHTML = `
+    <h1>${toBeChangedEle.id.toUpperCase()}</h1>
+    `
     arr.forEach((item, idx)=>{
         let mainDiv = document.createElement("div");
         mainDiv.setAttribute("class","generalClass");
@@ -113,12 +117,15 @@ function addElement(toBeChangedEle, arr){
         leftArrowBtn.setAttribute("class","arrowCSS");
         leftArrowBtn.addEventListener("click", function(){
             shiftLeft(toBeChangedEle.id, idx);
-        })
+        });
         leftArrowBtn.textContent = "\u2190";
 
         let rightArrowBtn = document.createElement("button");
         rightArrowBtn.setAttribute("class","arrowCSS");
         rightArrowBtn.textContent = "\u2192";
+        rightArrowBtn.addEventListener("click", function(){
+            shiftRight(toBeChangedEle.id, idx);
+        });
 
         if(toBeChangedEle.id=="done" || toBeChangedEle.id=="in-progess"){
             thirdDiv.appendChild(leftArrowBtn);
@@ -138,9 +145,23 @@ function addElement(toBeChangedEle, arr){
 function shiftLeft(idName, index){
     if(idName=="done"){
         inProgessArr.push(doneArr[index]);
-        doneArr = doneArr.filter((item, idx)=>{idx!=index});
-        console.log(doneArr);
-        console.log(inProgessArr);
+        doneArr = doneArr.filter((item, idx)=>idx!=index);
+    }
+    else if(idName=="in-progess"){
+        todoArr.push(inProgessArr[index]);
+        inProgessArr = inProgessArr.filter((item, idx)=>idx!=index);
+    }
+    renderUI();
+}
+
+function shiftRight(idName, index){
+    if(idName=="todo"){
+        inProgessArr.push(todoArr[index]);
+        todoArr = todoArr.filter((item, idx)=>idx!=index);
+    }
+    else if(idName=="in-progess"){
+        doneArr.push(inProgessArr[index]);
+        inProgessArr = inProgessArr.filter((item, idx)=>idx!=index);
     }
     renderUI();
 }
@@ -183,5 +204,4 @@ function renderUI(){
 }
 
 renderUI();
-console.log("Hello");
 
