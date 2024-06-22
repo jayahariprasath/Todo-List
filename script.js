@@ -48,13 +48,13 @@ doneArr = [
         "completion" : "2024-06-21"
     },
     {
-        "name" : "In-progess 2",
+        "name" : "Done2",
         "description" : "Just a simple Done 2 description",
         "status" : "Important",
         "completion" : "2024-06-21"
     },
     {
-        "name" : "In-progess 3",
+        "name" : "Done3",
         "description" : "Just a simple Done 3 description",
         "status" : "Critical",
         "completion" : "2024-06-21"
@@ -67,33 +67,109 @@ taskColorMap = {
     "Normal" : "green"
 }
 
-
-
 function addElement(toBeChangedEle, arr){
     arr.forEach((item, idx)=>{
-        toBeChangedEle.innerHTML +=`
-        <div class="generalClass">
-            <div class="taskList">
-                <h3> ${item['name']} </h3>
-                <button style="background-color: ${taskColorMap[item['status']]}"> ${item['status']} </button>
-            </div>
-            <p> ${item['description']} </p>
-            <div class="scrollBar"></div>
-            <br>
-            <div class="dateTimeToBeCompletedDiv" id="dateTimeToBeCompletedId">
-                <input type="date" name="completionDate" id="" class="dateTimeToBeCompleted" value = ${item['completion']}>
-            </div>
-        </div>
-        `
-        console.log(toBeChangedEle.id)
-        if(toBeChangedEle.id=="todo"){
-            let elementToBeChanged = document.getElementById("dateTimeToBeCompletedId")
-            elementToBeChanged.innerHTML += `
-            <button class="arrowCSS"> <b>&rarr;</b></button>
-            `
+        let mainDiv = document.createElement("div");
+        mainDiv.setAttribute("class","generalClass");
+
+        let secondaryDiv = document.createElement("div");
+        secondaryDiv.setAttribute("class","taskList");
+
+        let headDiv = document.createElement("h3");
+        headDiv.textContent = item['name'];
+
+        let buttonDiv = document.createElement("button");
+        buttonDiv.textContent = item['status'];
+        buttonDiv.style.backgroundColor = taskColorMap[item['status']];
+
+        secondaryDiv.appendChild(headDiv);
+        secondaryDiv.appendChild(buttonDiv);
+
+        mainDiv.appendChild(secondaryDiv);
+
+        let paraDiv = document.createElement("p");
+        paraDiv.textContent = item['description'];
+
+        mainDiv.appendChild(paraDiv);
+
+        let scrollDiv = document.createElement("div");
+        scrollDiv.setAttribute("class","scrollBar");
+
+        mainDiv.appendChild(scrollDiv);
+
+        let brtag = document.createElement("br");
+
+        mainDiv.appendChild(brtag);
+
+        let thirdDiv = document.createElement("div");
+        thirdDiv.setAttribute("class","dateTimeToBeCompletedDiv");
+
+        let inputDiv = document.createElement("input");
+        inputDiv.setAttribute("type","date");
+        inputDiv.setAttribute("class","dateTimeToBeCompleted");
+        inputDiv.value = item['completion'];
+
+        let leftArrowBtn = document.createElement("button");
+        leftArrowBtn.setAttribute("class","arrowCSS");
+        leftArrowBtn.addEventListener("click", function(){
+            shiftLeft(toBeChangedEle.id, idx);
+        })
+        leftArrowBtn.textContent = "\u2190";
+
+        let rightArrowBtn = document.createElement("button");
+        rightArrowBtn.setAttribute("class","arrowCSS");
+        rightArrowBtn.textContent = "\u2192";
+
+        if(toBeChangedEle.id=="done" || toBeChangedEle.id=="in-progess"){
+            thirdDiv.appendChild(leftArrowBtn);
         }
-    });
+        thirdDiv.appendChild(inputDiv);
+        
+        if(toBeChangedEle.id=="todo" || toBeChangedEle.id=="in-progess"){
+            thirdDiv.appendChild(rightArrowBtn);
+        }
+
+        mainDiv.appendChild(thirdDiv);
+
+        toBeChangedEle.appendChild(mainDiv);
+    })
 }
+
+function shiftLeft(idName, index){
+    if(idName=="done"){
+        inProgessArr.push(doneArr[index]);
+        doneArr = doneArr.filter((item, idx)=>{idx!=index});
+        console.log(doneArr);
+        console.log(inProgessArr);
+    }
+    renderUI();
+}
+
+// function addElement(toBeChangedEle, arr){
+//     arr.forEach((item, idx)=>{
+//         toBeChangedEle.innerHTML +=`
+//         <div class="generalClass">
+//             <div class="taskList">
+//                 <h3> ${item['name']} </h3>
+//                 <button style="background-color: ${taskColorMap[item['status']]}"> ${item['status']} </button>
+//             </div>
+//             <p> ${item['description']} </p>
+//             <div class="scrollBar"></div>
+//             <br>
+//             <div class="dateTimeToBeCompletedDiv" id="dateTimeToBeCompletedId">
+//                 <input type="date" name="completionDate" id="" class="dateTimeToBeCompleted" value = ${item['completion']}>
+//             </div>
+//         </div>
+//         `
+//         console.log(toBeChangedEle.id)
+//         // if(toBeChangedEle.id=="todo"){
+//         //     let elementToBeChanged = document.getElementById("dateTimeToBeCompletedId")
+//         //     elementToBeChanged.innerHTML += `
+//         //     <button class="arrowCSS"> <b>&rarr;</b></button>
+//         //     `
+//         // }
+//     });
+// }
 
 
 function renderUI(){
@@ -107,4 +183,5 @@ function renderUI(){
 }
 
 renderUI();
+console.log("Hello");
 
