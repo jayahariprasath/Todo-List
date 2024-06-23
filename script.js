@@ -3,19 +3,22 @@ todoArr = [
         "name" : "Todo1",
         "description" : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis quas deserunt at tempora, obcaecati ex! Enim fuga minima eaque voluptatem? Facere dolorem dolores earum consequatur totam minus illum dignissimos quaerat!",
         "status" : "Critical",
-        "completion" : "2024-06-21"// It should be yyyy-MM-dd format
+        "completePercentage" : 0,
+        "completionDate" : "2024-06-21"// It should be yyyy-MM-dd format
     },
     {
         "name" : "Todo2",
         "description" : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis quas deserunt at tempora, obcaecati ex! Enim fuga minima eaque voluptatem? Facere dolorem dolores earum consequatur totam minus illum dignissimos quaerat!",
         "status" : "Important",
-        "completion" : "2024-06-21"
+        "completePercentage" : 0,
+        "completionDate" : "2024-06-21"
     },
     {
         "name" : "Todo3",
         "description" : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis quas deserunt at tempora, obcaecati ex! Enim fuga minima eaque voluptatem? Facere dolorem dolores earum consequatur totam minus illum dignissimos quaerat!",
         "status" : "Normal",
-        "completion" : "2024-06-21"
+        "completionDate" : "2024-06-21",
+        "completePercentage" : 0
     }
 ]
 
@@ -24,19 +27,22 @@ inProgessArr = [
         "name" : "In-progess 1",
         "description" : "Just a simple In-progess 1 description",
         "status" : "Critical",
-        "completion" : "2024-06-21"
+        "completionDate" : "2024-06-21",
+        "completePercentage" : 40
     },
     {
         "name" : "In-progess 2",
         "description" : "Just a simple In-progess 2 description",
         "status" : "Normal",
-        "completion" : "2024-06-21"
+        "completionDate" : "2024-06-21",
+        "completePercentage" : 50
     },
     {
         "name" : "In-progess 3",
         "description" : "Just a simple In-progess 3 description",
         "status" : "Important",
-        "completion" : "2024-06-21"
+        "completionDate" : "2024-06-21",
+        "completePercentage" : 62
     }
 ]
 
@@ -45,19 +51,22 @@ doneArr = [
         "name" : "Done1",
         "description" : "Just a simple Done 1 description",
         "status" : "Normal",
-        "completion" : "2024-06-21"
+        "completionDate" : "2024-06-21",
+        "completePercentage" : 100
     },
     {
         "name" : "Done2",
         "description" : "Just a simple Done 2 description",
         "status" : "Important",
-        "completion" : "2024-06-21"
+        "completionDate" : "2024-06-21",
+        "completePercentage" : 100
     },
     {
         "name" : "Done3",
         "description" : "Just a simple Done 3 description",
         "status" : "Critical",
-        "completion" : "2024-06-21"
+        "completionDate" : "2024-06-21",
+        "completePercentage" : 100
     }
 ]
 
@@ -99,6 +108,18 @@ function addElement(toBeChangedEle, arr){
         let scrollDiv = document.createElement("div");
         scrollDiv.setAttribute("class","scrollBar");
 
+        let scrollEle = document.createElement("input");
+        scrollEle.type = "range";
+        scrollEle.min = 0;
+        scrollEle.max = 100;
+        scrollEle.className = "slider";
+        scrollEle.value = item['completePercentage']
+        scrollEle.addEventListener("click", function(){
+            moveBasedRespectiveArrBasedOnPercantageCompleted(scrollEle.value, idx, toBeChangedEle.id)
+        });
+
+        scrollDiv.appendChild(scrollEle);
+
         mainDiv.appendChild(scrollDiv);
 
         let brtag = document.createElement("br");
@@ -111,7 +132,7 @@ function addElement(toBeChangedEle, arr){
         let inputDiv = document.createElement("input");
         inputDiv.setAttribute("type","date");
         inputDiv.setAttribute("class","dateTimeToBeCompleted");
-        inputDiv.value = item['completion'];
+        inputDiv.value = item['completionDate'];
 
         let leftArrowBtn = document.createElement("button");
         leftArrowBtn.setAttribute("class","arrowCSS");
@@ -127,6 +148,10 @@ function addElement(toBeChangedEle, arr){
             shiftRight(toBeChangedEle.id, idx);
         });
 
+        let deleteBtn = document.createElement("button");
+        deleteBtn.setAttribute("class","deleteBtnCSS");
+        deleteBtn.textContent = "Delete Task";
+
         if(toBeChangedEle.id=="done" || toBeChangedEle.id=="in-progess"){
             thirdDiv.appendChild(leftArrowBtn);
         }
@@ -134,6 +159,9 @@ function addElement(toBeChangedEle, arr){
         
         if(toBeChangedEle.id=="todo" || toBeChangedEle.id=="in-progess"){
             thirdDiv.appendChild(rightArrowBtn);
+        }
+        else if(toBeChangedEle.id=="done"){
+            thirdDiv.appendChild(deleteBtn);
         }
 
         mainDiv.appendChild(thirdDiv);
@@ -166,6 +194,51 @@ function shiftRight(idName, index){
     renderUI();
 }
 
+function moveBasedRespectiveArrBasedOnPercantageCompleted(value, index, idName){
+    if(value==0){
+        if(idName=="done"){
+            elementToBePushed = doneArr[index];
+            elementToBePushed['completePercentage'] = value;
+            doneArr = doneArr.filter((item, idx)=>idx!=index);
+            todoArr.push(elementToBePushed);
+        }
+        else if(idName=="in-progess"){
+            elementToBePushed = inProgessArr[index];
+            elementToBePushed['completePercentage'] = value;
+            inProgessArr = inProgessArr.filter(function(item, idx) {return idx!=index});
+            todoArr.push(elementToBePushed);
+        }
+    }
+    else if(value==100){
+        if(idName=="todo"){
+            elementToBePushed = todoArr[index]
+            elementToBePushed['completePercentage'] = value;
+            todoArr = todoArr.filter((item, idx)=>idx!=index);
+            doneArr.push(elementToBePushed);
+        }
+        else if(idName=="in-progess"){
+            elementToBePushed = inProgessArr[index];
+            elementToBePushed['completePercentage'] = value;
+            inProgessArr = inProgessArr.filter(function(item, idx) {return idx!=index});
+            doneArr.push(elementToBePushed);
+        }
+    }
+    else if(value>0 && value<100){
+        if(idName=="todo"){
+            elementToBePushed = todoArr[index]
+            elementToBePushed['completePercentage'] = value;
+            todoArr = todoArr.filter((item, idx)=>idx!=index);
+            inProgessArr.push(elementToBePushed);
+        }
+        else if(idName=="done"){
+            elementToBePushed = doneArr[index];
+            elementToBePushed['completePercentage'] = value;
+            doneArr = doneArr.filter(function(item, idx) {return idx!=index});
+            inProgessArr.push(elementToBePushed);
+        }
+    }
+    renderUI();
+}
 // function addElement(toBeChangedEle, arr){
 //     arr.forEach((item, idx)=>{
 //         toBeChangedEle.innerHTML +=`
@@ -178,7 +251,7 @@ function shiftRight(idName, index){
 //             <div class="scrollBar"></div>
 //             <br>
 //             <div class="dateTimeToBeCompletedDiv" id="dateTimeToBeCompletedId">
-//                 <input type="date" name="completionDate" id="" class="dateTimeToBeCompleted" value = ${item['completion']}>
+//                 <input type="date" name="completionDate" id="" class="dateTimeToBeCompleted" value = ${item['completionDate']}>
 //             </div>
 //         </div>
 //         `
@@ -204,4 +277,3 @@ function renderUI(){
 }
 
 renderUI();
-
